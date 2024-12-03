@@ -1,33 +1,42 @@
 import heapq
 
-# Step 1: Package and City Details (Milestone 1)
+
+# Step 1: Define the Truck Class for Package Management
 class Truck:
     def __init__(self, rate_per_km=1.0):
         self.rate_per_km = rate_per_km  # Cost rate per kg-km
         self.stack = []  # Stack to hold packages
-    
+
     def load_packages(self, packages, route_order):
         """
         Load packages in reverse order of the delivery route.
         Route order should be a list of cities in the optimized delivery order.
         """
-        for city in route_order:
+        for city in reversed(route_order):
             # Find and load packages for the current city in reverse order
             for package in packages:
                 if package['city'] == city:
                     self.stack.append(package)
-    
+
     def generate_invoice(self):
-        print("\nInvoice:")
+        """
+        Generate an invoice based on the packages in the truck.
+        """
+        print("\n--- Invoice ---")
         total_cost = 0
         while self.stack:
             package = self.stack.pop()  # Process packages in reverse loading order
             cost = package["weight"] * package["distance"] * self.rate_per_km
             total_cost += cost
-            print(f"Package ID: {package['id']} | City: {package['city']} | Cost: ${cost:.2f}")
-        print(f"Total Cost: ${total_cost:.2f}")
+            print(
+                f"Package ID: {package['id']} | City: {package['city'].capitalize()} "
+                f"| Weight: {package['weight']}kg | Distance: {package['distance']}km | Cost: ${cost:.2f}"
+            )
+        print(f"Total Shipping Cost: ${total_cost:.2f}")
+        print("--- End of Invoice ---")
 
 
+# Step 2: Define the Function for Finding Optimal Route
 def find_optimal_route(cities, distances, start_city):
     """
     Use Dijkstra's algorithm to find the shortest path from start_city to other cities.
@@ -62,10 +71,11 @@ def find_optimal_route(cities, distances, start_city):
     return route
 
 
+# Step 3: Main Function for Input and Output
 def main():
     print("Welcome to the 1-Door Truck Loading Program!")
 
-    # Step 1: User Inputs Package and City Details
+    # User Inputs: Package Details and Cost Rate
     rate_per_km = float(input("Enter the rate per km per kg: "))
     num_packages = int(input("Enter the number of packages to load: "))
 
@@ -74,9 +84,7 @@ def main():
     for i in range(num_packages):
         print(f"\nEnter details for Package {i + 1}:")
         
-        # Normalize city names to lowercase
         city = input("City: ").strip().lower()
-        
         while True:
             try:
                 weight = float(input("Weight (kg): "))
@@ -101,10 +109,7 @@ def main():
         packages.append({"id": i + 1, "city": city, "weight": weight, "distance": distance})
         cities.add(city)
 
-    # Normalize all city names to lowercase
-    print("\nGenerating optimal route...")
-
-    # Fixing the distances dictionary to ensure all cities have all distances
+    # Distance Data
     distances = {
         "hanoi": {"hai phong": 100, "da nang": 800, "nha trang": 1100, "dalat": 1200, "hcmc": 1400},
         "hai phong": {"hanoi": 100, "da nang": 700, "nha trang": 1000, "dalat": 1200, "hcmc": 1300},
@@ -113,12 +118,10 @@ def main():
         "dalat": {"hanoi": 1200, "hai phong": 1200, "da nang": 900, "nha trang": 400, "hcmc": 500},
         "hcmc": {"hanoi": 1400, "hai phong": 1300, "da nang": 1000, "nha trang": 600, "dalat": 500},
     }
-
-    # Ensure city names in distances dictionary are lowercase
     distances = {city.lower(): {k.lower(): v for k, v in adj.items()} for city, adj in distances.items()}
     cities = [city.lower() for city in cities]
 
-    # Check that all input cities exist in the distances dictionary
+    # Ensure city names are valid
     for city in cities:
         if city not in distances:
             print(f"Error: City '{city}' is not valid. Please check your input.")
@@ -126,7 +129,12 @@ def main():
 
     # Generate the optimal route
     route_order = find_optimal_route(cities, distances, "hanoi")
-    print(f"\nOptimal delivery route: {route_order}")
+    print(f"\nOptimal delivery route: {', '.join(route_order)}")
+
+    # Load packages into the truck and generate the invoice
+    truck = Truck(rate_per_km)
+    truck.load_packages(packages, route_order)
+    truck.generate_invoice()
 
 
 if __name__ == "__main__":
