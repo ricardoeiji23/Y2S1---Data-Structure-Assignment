@@ -1,7 +1,6 @@
 import heapq
 
 
-# Step 1: Define the Truck Class for Package Management
 class Truck:
     def __init__(self, rate_per_km=1.0):
         self.rate_per_km = rate_per_km  # Cost rate per kg-km
@@ -12,8 +11,7 @@ class Truck:
         Load packages in reverse order of the delivery route.
         Route order should be a list of cities in the optimized delivery order.
         """
-        for city in reversed(route_order):
-            # Find and load packages for the current city in reverse order
+        for city in reversed(route_order): # Find and load packages for the current city in reverse order
             for package in packages:
                 if package['city'] == city:
                     self.stack.append(package)
