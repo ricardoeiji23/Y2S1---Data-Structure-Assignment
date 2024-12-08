@@ -1,6 +1,6 @@
 import heapq
 
-
+# ============================= Truck Class =============================
 class Truck:
     def __init__(self, rate_per_km=3000):  # Rate per km per weight in VND
         self.rate_per_km = rate_per_km  # Standard rate
@@ -48,6 +48,9 @@ class Truck:
         print("\n")
 
 
+
+# ============================= Dijkstra Method =============================
+
 def dijkstra_algorithm(start, graph, packages):
     """
     Standard Dijkstra's to find shortest paths only relevant to cities with packages.
@@ -72,6 +75,7 @@ def dijkstra_algorithm(start, graph, packages):
     valid_cities = [city for city in packages if distances[city] != float('inf')]
     return valid_cities, distances
 
+# ============================= Main Method =============================
 
 def main():
     print("Welcome to the Hanoi Roadways Truck Loading and Route Planning Program!")
@@ -93,6 +97,7 @@ def main():
 
     # Package input
     packages = []
+    
     valid_cities = set(distances.keys())
     for i in range(num_packages):
         print(f"\nEnter details for package {i + 1}:")
@@ -146,6 +151,9 @@ def main():
 
     truck.generate_invoice()
 
+
+
+# ============================= Calling main() Method =============================
 
 if __name__ == "__main__":
     main()
