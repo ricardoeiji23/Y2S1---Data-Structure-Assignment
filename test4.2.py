@@ -96,11 +96,21 @@ def main():
     fixed_route = ["hanoi", "hai phong", "da nang", "nha trang", "dalat", "hcmc"]
     
     # Filter the route to only show cities the user entered
-    user_route = [city for city in fixed_route if any(package["city"] == city for package in packages)]
+    #user_route = [city for city in fixed_route if any(package["city"] == city for package in packages)]
+    user_route=[]
+    for city in fixed_route:
+        package_found = False
+        for package in packages:
+            if package["city"] == city:
+                package_found = True
+                break
+        
+        if package_found:
+            user_route.append(city)
 
     print(
         "\n==========================="
-        f"\nOptimal delivery route: {' -> '.join(user_route)}"
+        f"\nOptimal delivery route: {' -> '.join(user_route)}" # separator.join(iterable)
     )  # Dynamically show only user-entered cities in the fixed path
 
     # Load packages into truck
@@ -109,7 +119,7 @@ def main():
 
     print(
         "\n==========================="
-        "\nLoading Order:"
+        "\nLoading Order (Follow this order to load the truck):"  
     )
     for package in truck.stack: # package could be "i" | truck.stack = Is the packages in the truck
         print(f"Package ID: {package['id']} | City: {package['city']} | Weight: {package['weight']}kg")
