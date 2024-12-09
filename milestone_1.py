@@ -1,52 +1,12 @@
-# Comments for the Milestone 1 (Truck Loading Problem)
 
-class Truck:
-    def __init__(self, rate_per_km=3000):  
-        self.rate_per_km = rate_per_km 
-        self.stack = [] 
+# Step 1 - Input the number of packages
+print("\n")
+num_packages = int(input("Enter the number of packages to load: "))
 
-    def load_packages(self, packages, route_order):
-        for city in reversed(route_order):
-            for package in packages:
-                if package["city"] == city:
-                    self.stack.append(package)
+# Step 2 - Package details collection
+packages = []
 
-    def generate_invoice(self):
-        print("\n===========================")
-        print("--- Invoice ---")
-        total_cost = 0
-
-        while self.stack:
-            package = self.stack.pop()
-
-            if package["city"] == "hanoi":
-                cost = package["weight"] * 3000
-            else:
-                cost = package["weight"] * package["distance"] * self.rate_per_km
-
-            total_cost += cost
-            
-            print(
-                f"Package ID: {package['id']} | City: {package['city'].capitalize()} | Weight: {package['weight']}kg | Distance: {package['distance']}km | Cost: {cost:,.0f} VND".replace(',', '.')
-            )
-
-        
-        print(f"\nTotal shipping cost: {total_cost:,.0f} VND".replace(',', '.'))
-        print("--- End of Invoice ---")
-        print("\n")
-
-
-def main():
-    print("\n")
-    print("Welcome to the Hanoi Roadways Truck Loading and Route Planning Program!")
-
-    
-    rate_per_km = 3000  
-    print(f"Shipping rate: {rate_per_km} VND per km per kg.\n")
-    num_packages = int(input("Enter the number of packages to load: "))
-
-    
-    distances = {
+distances = {
         "hanoi": {"hai phong": 120, "da nang": 800, "hcmc": 1400, "nha trang": 1300, "dalat": 1200},
         "hai phong": {"hanoi": 120, "da nang": 900, "hcmc": 1500, "nha trang": 1400, "dalat": 1300},
         "da nang": {"hanoi": 800, "hai phong": 900, "hcmc": 1000, "nha trang": 300, "dalat": 400},
@@ -54,73 +14,71 @@ def main():
         "dalat": {"hanoi": 1200, "hai phong": 1300, "hcmc": 300, "da nang": 400, "nha trang": 200},
         "hcmc": {"hanoi": 1400, "hai phong": 1500, "da nang": 1000, "nha trang": 400, "dalat": 300}
     }
-
-    # Step 1: Ask the inputs
-    packages = []
     
-    valid_cities = set(distances.keys()) 
+valid_cities = set(distances.keys()) 
 
-    for i in range(num_packages):
-        print(f"\nEnter details for package {i + 1}:")
-        
-        while True: # Ask for the city input
-            city = input("City: ").strip().lower()
-            if city not in valid_cities:
-                print(f"Error: '{city}' is invalid. Try again.")
-            else:
-                break
+for i in range(num_packages):
+    print(f"\nEnter details for package {i + 1}:")
+    
+    while True: # Ask for the city input
+        city = input("City: ").strip().lower()
+        if city not in valid_cities:
+            print(f"Error: '{city}' is invalid. Try again.")
+        else:
+            break
 
-        while True: # Ask for the weight input
-            try:
-                weight = float(input("Weight (kg): "))
-                if weight <= 0:
-                    print("Weight must be positive.")
-                    continue
-                break
-            except ValueError:
-                print("Invalid input. Try again.")
-
-        
-        packages.append({ # Append the package's information into the "packages" list 
-            "id": i + 1,
-            "city": city,
-            "weight": weight,
-            "distance": distances["hanoi"].get(city, 0),
-        })
+    while True: # Ask for the weight input
+        try:
+            weight = float(input("Weight (kg): "))
+            if weight <= 0:
+                print("Weight must be positive.")
+                continue
+            break
+        except ValueError:
+            print("Invalid input. Try again.")
 
     
-    fixed_route = ["hanoi", "hai phong", "da nang", "nha trang", "dalat", "hcmc"] # Step 2: Define delivery route
+    packages.append({ # Append the package's information into the "packages" list 
+        "id": i + 1,
+        "city": city,
+        "weight": weight,
+        "distance": distances["hanoi"].get(city, 0),
+    })
+
+# Step 3 - Define delivery routes
+fixed_route = ["hanoi", "hai phong", "da nang", "nha trang", "dalat", "hcmc"] # Step 2: Define delivery route
+
+user_route=[] # Generate a filtered user-defined route (Only cities specified by the user) (It's already in the correct order because it's followin the "fixed_route" list)
+for city in fixed_route:
+    package_found = False
+    for package in packages:
+        if package["city"] == city:
+            package_found = True
+            break
     
-    user_route=[] # Generate a filtered user-defined route (Only cities specified by the user) (It's already in the correct order because it's followin the "fixed_route" list)
-    for city in fixed_route:
-        package_found = False
-        for package in packages:
-            if package["city"] == city:
-                package_found = True
-                break
-        
-        if package_found:
-            user_route.append(city)
+    if package_found:
+        user_route.append(city)
 
-    print(
-        "\n==========================="
-        f"\nOptimal delivery route: {' -> '.join(user_route)}" 
-    )
+# Setp 4 - Organize packages to load the truck
 
-    
-    truck = Truck(rate_per_km)
-    truck.load_packages(packages, user_route)
+rate_per_km=3000
+truck_stack = [] # The "stack" doesn't fundamentally change anything (It could be any name)
 
-    print(
+def load_packages(packages, route_order):
+        for city in reversed(route_order):
+            for package in packages:
+                if package["city"] == city:
+                    truck_stack.append(package)
+
+# Step 5 - Output the loading order
+print(
         "\n==========================="
         "\nLoading Order (Follow This Order for Proper Truck Loading):"  
     )
-    for package in truck.stack: 
-        print(f"Package ID: {package['id']} | City: {package['city']} | Weight: {package['weight']}kg")
 
-    truck.generate_invoice()
+load_packages(packages, user_route)
 
+for i, package in enumerate(truck_stack): 
+    print(f"Load Order: {i+1} | Package ID: {package['id']} | City: {package['city']} | Weight: {package['weight']}kg")
 
-
-if __name__ == "__main__":
-    main()
+print("\n")

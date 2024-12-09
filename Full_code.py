@@ -113,8 +113,8 @@ def main():
         "\n==========================="
         "\nLoading Order (Follow This Order for Proper Truck Loading):"  
     )
-    for package in truck.stack: 
-        print(f"Package ID: {package['id']} | City: {package['city']} | Weight: {package['weight']}kg")
+    for i, package in enumerate(truck.stack): 
+        print(f"Load Order: {i+1} | Package ID: {package['id']} | City: {package['city']} | Weight: {package['weight']}kg")
 
     truck.generate_invoice()
 
