@@ -2,7 +2,7 @@
 print("\n")
 num_packages = int(input("Enter the number of packages to load: "))
 
-# Step 2 - Package details collection
+# Step 2 - Package details collection (Append the details in "packages")
 packages = [] #Store the packages' details 
 
 distances = {
@@ -14,9 +14,9 @@ distances = {
         "hcmc": {"hanoi": 1400, "hai phong": 1500, "da nang": 1000, "nha trang": 400, "dalat": 300}
     }
     
-valid_cities = set(distances.keys()) 
+valid_cities = set(distances.keys()) # Set of all cities (keys) of the dictionary
 
-for i in range(num_packages):
+for i in range(num_packages): # Loop the number of packages inputted
     print(f"\nEnter details for package {i + 1}:")
     
     while True: # Ask for the city input
@@ -41,7 +41,7 @@ for i in range(num_packages):
         "id": i + 1,
         "city": city,
         "weight": weight,
-        "distance": distances["hanoi"].get(city, 0),
+        "distance": distances["hanoi"].get(city, 0), # Get the distance in the dictionary
     })
 
 # Step 3 - Define delivery routes
@@ -59,15 +59,10 @@ for city in fixed_route:
         user_route.append(city)
 
 # Step 4 - Output the loading order
-print(
-        "\n==========================="
-        "\nLoading Order (Follow This Order for Proper Truck Loading):"  
-    )
-
 
 print(
-        "\n==========================="
-        f"\nOptimal delivery route: {' -> '.join(user_route)}" 
+        "\n"
+        f"\nOptimal delivery route: {' -> '.join(user_route)}"  # It will Append (->) after each element inside (user_route)
     )
 
 print("\n")

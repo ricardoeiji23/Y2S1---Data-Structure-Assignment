@@ -1,9 +1,9 @@
 
-# Step 1 - Input the number of packages
+# =============== Step 1 - Input the number of packages =============== 
 print("\n")
 num_packages = int(input("Enter the number of packages to load: "))
 
-# Step 2 - Package details collection
+# =============== Step 2 - Package details collection (Append in "packages") ===============
 packages = []
 
 distances = {
@@ -45,8 +45,8 @@ for i in range(num_packages):
         "distance": distances["hanoi"].get(city, 0),
     })
 
-# Step 3 - Define delivery routes
-fixed_route = ["hanoi", "hai phong", "da nang", "nha trang", "dalat", "hcmc"] # Step 2: Define delivery route
+# =============== Step 3 - Define delivery routes ===============
+fixed_route = ["hanoi", "hai phong", "da nang", "nha trang", "dalat", "hcmc"] # Defined delivery route
 
 user_route=[] # Generate a filtered user-defined route (Only cities specified by the user) (It's already in the correct order because it's followin the "fixed_route" list)
 for city in fixed_route:
@@ -59,7 +59,7 @@ for city in fixed_route:
     if package_found:
         user_route.append(city)
 
-# Setp 4 - Organize packages to load the truck
+# =============== Step 4 - Organize packages to load the truck ===============
 
 rate_per_km=3000
 truck_stack = [] # The "stack" doesn't fundamentally change anything (It could be any name)
@@ -70,7 +70,7 @@ def load_packages(packages, route_order):
                 if package["city"] == city:
                     truck_stack.append(package)
 
-# Step 5 - Output the loading order
+# =============== Step 5 - Output the loading order ===============
 print(
         "\n==========================="
         "\nLoading Order (Follow This Order for Proper Truck Loading):"  
